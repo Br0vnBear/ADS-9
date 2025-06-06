@@ -6,7 +6,7 @@
 
 #include "tree.h"
 
-Node::Node(char val) : value(val) {}
+Node::Node(char val) : n(val) {}
 
 Node::~Node() {
   for (Node* child : children) {
@@ -34,7 +34,7 @@ void PMTree::buildSubtree(Node* parent, std::vector<char> avail_ch) {
 }
 
 PMTree::PMTree(std::vector<char> in)
-    : initial_size_(static_cast<int>(in.size())) {
+    : size(static_cast<int>(in.size())) {
   std::vector<char> sorted_in = in;
   std::sort(sorted_in.begin(), sorted_in.end());
 
@@ -62,7 +62,7 @@ namespace {
 
 void getAllPermsRecursive(Node* node, std::vector<char>& cur_perm,
                           std::vector<std::vector<char>>& all_perms_list) {
-  cur_perm.push_back(node->value);
+  cur_perm.push_back(node->n);
 
   if (node->children.empty()) {
     all_perms_list.push_back(cur_perm);
@@ -96,7 +96,7 @@ std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
   std::vector<std::vector<char>> all_perms_list;
   std::vector<char> cur_perm;
   for (Node* root_child : tree.getRootChild()) {
-    getAllPermsRecursive(rt_child, cur_perm, all_perms_list);
+    getAllPermsRecursive(root_child, cur_perm, all_perms_list);
   }
   return all_perms_list;
 }
@@ -114,7 +114,7 @@ std::vector<char> getPerm1(PMTree& tree, int num) {
 
 std::vector<char> getPerm2(PMTree& tree, int num) {
   std::vector<char> result_perm;
-  const int n = tree.getInitialSize();
+  const int n = tree.getSize();
 
   if (num <= 0) {
     return {};
@@ -163,7 +163,7 @@ std::vector<char> getPerm2(PMTree& tree, int num) {
     }
 
     Node* chosen_node = cur_level_nodes[child_index];
-    result_perm.push_back(chosen_node->value);
+    result_perm.push_back(chosen_node->n);
 
     if (i < n - 1) {
       k %= permutations_per_branch;
